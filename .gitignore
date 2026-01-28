@@ -1,0 +1,20 @@
+## .NET
+bin/
+obj/
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+
+## Logs
+Logs/
+*.log
+
+## Secrets
+appsettings.Development.json
+secrets.json
+
+## OS
+.DS_Store
+Thumbs.db
