@@ -19,7 +19,7 @@ namespace BookingService.Infrastructure.Repositories
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<Booking> CreateAsync(Booking booking)
+        public async Task<Booking> AddAsync(Booking booking)
         {
             dbContext.Bookings.Add(booking);
             await dbContext.SaveChangesAsync();
@@ -36,6 +36,18 @@ namespace BookingService.Infrastructure.Repositories
             return await dbContext.Bookings.FindAsync(id);
         }
 
+        public async Task<List<Booking>> GetByUserAsync(string email)
+        {
+            return await dbContext.Bookings
+                .Where(b => b.UserEmail == email)
+                .ToListAsync();
+        }
+        public async Task UpdateAsync(Booking booking)
+        {
+            dbContext.Bookings.Update(booking);
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task CancelAsync(int id)
         {
             var booking = await dbContext.Bookings.FindAsync(id);
@@ -45,5 +57,4 @@ namespace BookingService.Infrastructure.Repositories
             await dbContext.SaveChangesAsync();
         }
     }
-
 }

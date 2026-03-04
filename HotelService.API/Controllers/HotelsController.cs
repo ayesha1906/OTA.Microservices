@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using HotelService.Application.Interfaces;
+﻿using HotelService.Application.Interfaces;
 using HotelService.Domain;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelService.API.Controllers
 {
@@ -48,5 +49,37 @@ namespace HotelService.API.Controllers
             await _repo.DeleteAsync(id);
             return NoContent();
         }
+
+        [HttpGet("{hotelId}/availability")]
+        public async Task<IActionResult> CheckAvailability(
+    int hotelId,
+    DateTime checkIn,
+    DateTime checkOut)
+        {
+            var available = await _repo.CheckAvailabilityAsync(hotelId, checkIn, checkOut);
+
+            return Ok(available);
+        }
+
+        [HttpPost("{hotelId}/reserve")]
+        public async Task<IActionResult> Reserve(
+    int hotelId,
+    DateTime checkIn,
+    DateTime checkOut)
+        {
+            await _repo.ReserveRoomsAsync(hotelId, checkIn, checkOut);
+            return Ok();
+        }
+
+        [HttpPost("{hotelId}/restore")]
+        public async Task<IActionResult> Restore(
+    int hotelId,
+    DateTime checkIn,
+    DateTime checkOut)
+        {
+            await _repo.RestoreRoomsAsync(hotelId, checkIn, checkOut);
+            return Ok();
+        }
+
     }
 }

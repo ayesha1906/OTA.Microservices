@@ -40,4 +40,65 @@ public class HotelRepository : IHotelRepository
         dbContext.Hotels.Remove(hotel);
         await dbContext.SaveChangesAsync();
     }
+
+    public async Task<bool> CheckAvailabilityAsync(int hotelId, DateTime checkIn, DateTime checkOut)
+    {
+        var dates = Enumerable.Range(0, (checkOut - checkIn).Days)
+            .Select(d => checkIn.AddDays(d));
+
+        foreach (var date in dates)
+        {
+            var inventory = await dbContext.RoomInventories
+                .FirstOrDefaultAsync(x =>
+                    x.HotelId == hotelId &&
+                    x.Date.Date == date.Date);
+
+            if (inventory == null || inventory.AvailableRooms <= 0)
+                return false;
+        }
+
+        return true;
+    }
+
+    public async Task ReserveRoomsAsync(int hotelId, DateTime checkIn, DateTime checkOut)
+    {
+        var dates = Enumerable.Range(0, (checkOut - checkIn).Days)
+            .Select(d => checkIn.AddDays(d));
+
+        foreach (var date in dates)
+        {
+            var inventory = await dbContext.RoomInventories
+                .FirstOrDefaultAsync(x =>
+                    x.HotelId == hotelId &&
+                    x.Date.Date == date.Date);
+
+            if (inventory != null)
+            {
+                inventory.AvailableRooms -= 1;
+            }
+        }
+
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task RestoreRoomsAsync(int hotelId, DateTime checkIn, DateTime checkOut)
+    {
+        var dates = Enumerable.Range(0, (checkOut - checkIn).Days)
+            .Select(d => checkIn.AddDays(d));
+
+        foreach (var date in dates)
+        {
+            var inventory = await dbContext.RoomInventories
+                .FirstOrDefaultAsync(x =>
+                    x.HotelId == hotelId &&
+                    x.Date.Date == date.Date);
+
+            if (inventory != null)
+            {
+                inventory.AvailableRooms += 1;
+            }
+        }
+
+        await dbContext.SaveChangesAsync();
+    }
 }

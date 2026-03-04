@@ -10,14 +10,13 @@ namespace HotelService.Infrastructure.Data;
 
 public class HotelDbContext : DbContext
 {
-    //public HotelDbContext(DbContextOptions<HotelDbContext> options)
-    //    : base(options) { }
+    public DbSet<Hotel> Hotels { get; set; }
 
-    //public DbSet<Hotel> Hotels => Set<Hotel>();
+    public DbSet<RoomInventory> RoomInventories { get; set; }
 
-    public HotelDbContext(DbContextOptions options) : base(options)
+    public HotelDbContext(DbContextOptions<HotelDbContext> options)
+        : base(options)
     {
     }
-
-    public DbSet<Hotel> Hotels { get; set; }
 }
+

@@ -14,5 +14,10 @@ namespace HotelService.Application.Interfaces
         Task AddAsync(Hotel hotel);
         Task UpdateAsync(Hotel hotel);
         Task DeleteAsync(int id);
+        Task<bool> CheckAvailabilityAsync(int hotelId, DateTime checkIn, DateTime checkOut);
+
+        Task ReserveRoomsAsync(int hotelId, DateTime checkIn, DateTime checkOut);
+
+        Task RestoreRoomsAsync(int hotelId, DateTime checkIn, DateTime checkOut);
     }
 }
